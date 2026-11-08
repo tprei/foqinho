@@ -22,6 +22,7 @@ This is a personal habit tool, not anti-fraud. It adds friction; the owner can a
 - No in-app reader, no OCR, no vector database, no Anki. See "Later".
 - No DRM circumvention. Protected files are refused with a pointer to model-knowledge mode.
 - No deployment target change. The app stays at iOS 17.6; `SpeechAnalyzer` is used behind `#available(iOS 26.0, *)`.
+- No plain-HTTP endpoints, including a local Ollama on the LAN. The provider sends the API key in a header, App Transport Security blocks cleartext by default, and a LAN-only endpoint isn't reachable away from home. Use an HTTPS endpoint (a hosted provider, or a local server behind a TLS tunnel). The settings screen says so when the URL isn't `https`.
 - No paid calls without a configured key, a started conversation and recorded consent for the endpoint's host.
 
 ## What exists and why the pause
@@ -394,7 +395,7 @@ struct StudyConversation: Equatable {
 ## Documents (`Documents/`)
 
 - **Import**: `.fileImporter` with `[.pdf, .epub]`. The library copies the file under security-scoped access into `Application Support/StudyLibrary/{id}/source.{pdf|epub}`, extracts it, indexes it, and writes `index.json`. The folder is excluded from backup, with file protection `completeUntilFirstUserAuthentication`.
-- **PDF**: `PDFStudyExtractor` uses PDFKit. Each page's `string` becomes a block. The title and author come from document attributes, falling back to the file name. The outline (top two levels) becomes chapter marks. A locked encrypted document is `protected`. Fewer than 200 characters in total is `noText` (scanned; OCR is later).
+- **PDF**: `PDFStudyExtractor` uses PDFKit. Readium can also open PDFs, and its search runs on the Content API for both formats, but its content-extraction guide marks extraction experimental. PDFKit's per-page `string` gives exact page locators with no extra layer. Each page's `string` becomes a block. The title and author come from document attributes, falling back to the file name. The outline (top two levels) becomes chapter marks. A locked encrypted document is `protected`. Fewer than 200 characters in total is `noText` (scanned; OCR is later).
 - **EPUB**: `EPUBStudyExtractor` uses Readium Swift Toolkit (BSD-3-Clause, SPM, iOS 15+), products `ReadiumShared` and `ReadiumStreamer` only.
   - Open with `AssetRetriever` and `PublicationOpener(parser: DefaultPublicationParser(...))`, `allowUserInteraction: false`, no content protections registered.
   - A reading-order link with `properties.encryption` is `protected`, as is an opening error that reports protection. Other opening errors are `unreadable`.
