@@ -59,6 +59,20 @@ struct SettingsView: View {
 
         AppIconPicker()
 
+        Section("Study Unlock") {
+          NavigationLink {
+            StudySettingsScreen(environment: .live())
+          } label: {
+            VStack(alignment: .leading, spacing: 2) {
+              Text("Model, Privacy & Library")
+                .foregroundStyle(.primary)
+              Text("Explain what you read to pause blocking")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            }
+          }
+        }
+
         Section("Help & Troubleshooting") {
           Link(destination: URL(string: "https://www.foqos.app/support.html")!) {
             HStack {
