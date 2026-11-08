@@ -635,17 +635,18 @@ Presentational views come from `ui-designer` and take plain values and callbacks
 
 ## PRs
 
-Each PR is a branch on the previous one, titled `[n/9] …`, under 1,000 changed lines excluding lockfiles and fixtures, with `## Stack`, `## Scope`, `## Depends on`, `## Left out`, and the checks that ran and the ones that couldn't.
+Each PR is a branch on the previous one, titled `[n/10] …`, under 1,000 changed lines excluding lockfiles and fixtures, with `## Stack`, `## Scope`, `## Depends on`, `## Left out`, and the checks that ran and the ones that couldn't.
 
 1. `study/1-plan`: this plan.
-2. `study/2-contract`: vocabulary, schema, decoding, validator, decision, code rules test, tests.
-3. `study/3-conversation`: position parser, retriever, phrases, prompt builder, conversation, tests.
-4. `study/4-documents`: indexer, PDF and EPUB extraction, library, Readium package, fixtures, tests.
-5. `study/5-voice`: audio session, synthesizer, listener (SpeechAnalyzer and SFSpeechRecognizer), permissions, Info.plist keys.
-6. `study/6-provider`: configuration, settings store, Keychain, OpenAI-compatible adapter, factory, fixtures, tests.
-7. `study/7-unlock`: profile fields and form section, pause with a duration, grant store, end-time lookup, `startStudyUnlock`, widget membership, tests.
-8. `study/8-session`: `StudySessionModel` with fakes-driven tests.
-9. `study/9-ui`: views, settings model, active-session entry and card, Settings row, README.
+2. `study/2-vocabulary`: the shared domain types and ports.
+3. `study/3-contract`: decoding, validator, decision, code rules test, tests.
+4. `study/4-conversation`: position parser, retriever, phrases, prompt builder, conversation, tests.
+5. `study/5-documents`: indexer, PDF and EPUB extraction, library, Readium package, fixtures, tests.
+6. `study/6-voice`: audio session, synthesizer, listener (SpeechAnalyzer and SFSpeechRecognizer), permissions, Info.plist keys.
+7. `study/7-provider`: configuration, settings store, Keychain, OpenAI-compatible adapter, factory, fixtures, tests.
+8. `study/8-unlock`: profile fields and form section, pause with a duration, grant store, end-time lookup, `startStudyUnlock`, widget membership, tests.
+9. `study/9-session`: `StudySessionModel` with fakes-driven tests.
+10. `study/10-ui`: views, settings model, active-session entry and card, Settings row, README.
 
 ## Tests that matter
 
