@@ -22,6 +22,8 @@ final class BlockedProfileDraft: ObservableObject {
   @Published var disableBackgroundStops: Bool
   @Published var enableHardMode: Bool
   @Published var hardModeDurationInMinutes: Int
+  @Published var enableStudyUnlock: Bool
+  @Published var studyUnlockMinutes: Int
   @Published var enableEmergencyUnblock: Bool
   @Published var domains: [String]
   @Published var physicalUnblockItems: [PhysicalUnblockItem]
@@ -65,6 +67,8 @@ final class BlockedProfileDraft: ObservableObject {
     enableEmergencyUnblock = profile?.enableEmergencyUnblock ?? true
     enableHardMode = profile?.enableHardMode ?? false
     hardModeDurationInMinutes = profile?.hardModeDurationInMinutes ?? 30
+    enableStudyUnlock = profile?.enableStudyUnlock ?? false
+    studyUnlockMinutes = profile?.studyUnlockMinutes ?? StudyUnlockRules.defaultMinutes
     reminderTimeInMinutes = Int(profile?.reminderTimeInSeconds ?? 900) / 60
     customReminderMessage = profile?.customReminderMessage ?? ""
     domains = profile?.domains ?? []
@@ -103,6 +107,10 @@ final class BlockedProfileDraft: ObservableObject {
     return selectedStrategy?.allowsTimedBreaks ?? true
   }
 
+  var selectedStrategyAllowsStudyUnlock: Bool {
+    return selectedStrategy?.allowsStudyUnlock ?? true
+  }
+
   var selectedStrategyAllowsHardMode: Bool {
     !(selectedStrategy?.hasTimer ?? false)
   }
@@ -127,6 +135,7 @@ final class BlockedProfileDraft: ObservableObject {
     let physicalUnblockItemsToSave: [PhysicalUnblockItem]? =
       physicalUnblockItems.isEmpty ? nil : physicalUnblockItems
     let enableTimedBreaksToSave = selectedStrategyAllowsTimedBreaks && enableBreaks
+    let enableStudyUnlockToSave = selectedStrategyAllowsStudyUnlock && enableStudyUnlock
 
     if let existingProfile {
       let updatedProfile = try BlockedProfiles.updateProfile(
@@ -157,7 +166,9 @@ final class BlockedProfileDraft: ObservableObject {
         disableBackgroundStops: disableBackgroundStops,
         enableEmergencyUnblock: enableEmergencyUnblock,
         enableHardMode: selectedStrategyAllowsHardMode && enableHardMode,
-        hardModeDurationInMinutes: hardModeDurationInMinutes
+        hardModeDurationInMinutes: hardModeDurationInMinutes,
+        enableStudyUnlock: enableStudyUnlockToSave,
+        studyUnlockMinutes: studyUnlockMinutes
       )
 
       DeviceActivityCenterUtil.scheduleTimerActivity(for: updatedProfile)
@@ -190,7 +201,9 @@ final class BlockedProfileDraft: ObservableObject {
       disableBackgroundStops: disableBackgroundStops,
       enableEmergencyUnblock: enableEmergencyUnblock,
       enableHardMode: selectedStrategyAllowsHardMode && enableHardMode,
-      hardModeDurationInMinutes: hardModeDurationInMinutes
+      hardModeDurationInMinutes: hardModeDurationInMinutes,
+      enableStudyUnlock: enableStudyUnlockToSave,
+      studyUnlockMinutes: studyUnlockMinutes
     )
 
     DeviceActivityCenterUtil.scheduleTimerActivity(for: newProfile)
@@ -205,6 +218,10 @@ final class BlockedProfileDraft: ObservableObject {
     if !selectedStrategyAllowsTimedBreaks {
       enableBreaks = false
       allowMultipleBreaks = false
+    }
+
+    if !selectedStrategyAllowsStudyUnlock {
+      enableStudyUnlock = false
     }
 
     if !selectedStrategySupportsAllowMode && enableAllowMode {

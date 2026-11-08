@@ -11,28 +11,12 @@ enum SoftUnblockGrantScheduler {
   }
 
   static func scheduleGrant(_ grant: SoftUnblockGrant) throws {
-    let center = DeviceActivityCenter()
-    let activityName = activityName(for: grant)
-    let calendar = Calendar.current
-    let now = Date()
-    let dateComponents: Set<Calendar.Component> = [
-      .year, .month, .day, .hour, .minute, .second,
-    ]
-    let intervalStart = calendar.dateComponents(
-      dateComponents,
-      from: calendar.startOfDay(for: now)
+    let schedule = OneShotDeviceActivitySchedule.make(
+      endingAt: grant.expiresAt,
+      now: Date(),
+      calendar: .current
     )
-    let intervalEnd = calendar.dateComponents(
-      dateComponents,
-      from: max(grant.expiresAt, now.addingTimeInterval(60))
-    )
-    let schedule = DeviceActivitySchedule(
-      intervalStart: intervalStart,
-      intervalEnd: intervalEnd,
-      repeats: false
-    )
-
-    try center.startMonitoring(activityName, during: schedule)
+    try DeviceActivityCenter().startMonitoring(activityName(for: grant), during: schedule)
   }
 
   static func stopAll(sessionId: String? = nil) {

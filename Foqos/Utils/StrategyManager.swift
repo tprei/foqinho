@@ -78,6 +78,7 @@ class StrategyManager: ObservableObject {
 
   func loadActiveSession(context: ModelContext) {
     activeSession = getActiveSession(context: context)
+    endExpiredStudyPause(context: context)
     ActiveProfileSyncStore.publish(session: activeSession)
 
     if activeSession?.isActive == true {
@@ -403,6 +404,85 @@ class StrategyManager: ObservableObject {
     }
 
     return profileName
+  }
+
+  func startStudyUnlock(
+    context: ModelContext,
+    approval: StudyApproval,
+    sessionId: String,
+    now: Date = Date(),
+    schedulePause: (BlockedProfiles, Date, Date) throws -> Void =
+      DeviceActivityCenterUtil.schedulePauseTimerActivity(for:endingAt:now:)
+  ) throws -> StudyUnlockGrant {
+    guard let session = getActiveSession(context: context) else {
+      throw StudyUnlockError.noActiveSession
+    }
+    guard session.id == sessionId else { throw StudyUnlockError.sessionChanged }
+
+    let profile = session.blockedProfile
+    guard profile.allowsStudyUnlock else {
+      throw StudyUnlockError.unsupportedStrategy(profileName: profile.name)
+    }
+    guard profile.enableStudyUnlock else {
+      throw StudyUnlockError.disabled(profileName: profile.name)
+    }
+    guard !session.isPauseActive else { throw StudyUnlockError.pauseActive }
+    guard !session.isBreakActive else { throw StudyUnlockError.breakActive }
+
+    let minutes = StudyUnlockRules.clampedMinutes(profile.studyUnlockMinutes)
+    let grant = StudyUnlockGrant(
+      id: UUID(),
+      sessionId: session.id,
+      profileId: profile.id,
+      createdAt: now,
+      expiresAt: StudyUnlockRules.expiry(from: now, minutes: minutes),
+      mode: approval.mode,
+      coveredConceptCount: approval.coveredConceptCount,
+      evidenceLocators: approval.evidenceLocators.map(\.label),
+      followUpCount: approval.followUpCount
+    )
+
+    do {
+      try StudyUnlockGrantStore.record(grant)
+    } catch {
+      throw StudyUnlockError.recordingFailed
+    }
+    do {
+      try schedulePause(profile, grant.expiresAt, now)
+    } catch {
+      let reason = error.localizedDescription
+      do {
+        try StudyUnlockGrantStore.remove(id: grant.id)
+      } catch {
+        throw StudyUnlockError.recordingFailed
+      }
+      throw StudyUnlockError.schedulingFailed(reason: reason)
+    }
+
+    handlePauseStarted(context: context)
+    return grant
+  }
+
+  // The pause timer extension restores blocking when the study pause ends. If that callback
+  // was missed, opening the app restores it here.
+  private func endExpiredStudyPause(context: ModelContext, now: Date = Date()) {
+    guard let session = activeSession, session.isPauseActive,
+      let pauseStart = session.pauseStartTime,
+      let grant = StudyUnlockGrantStore.grant(
+        sessionId: session.id, coveringPauseStartedAt: pauseStart),
+      grant.expiresAt <= now
+    else {
+      return
+    }
+
+    DeviceActivityCenterUtil.removePauseTimerActivity(for: session.blockedProfile)
+    session.endPause()
+    appBlocker.activateRestrictions(for: BlockedProfiles.getSnapshot(for: session.blockedProfile))
+    do {
+      try context.save()
+    } catch {
+      errorMessage = "Blocking is back on, but the session couldn't be saved."
+    }
   }
 
   func stopSessionFromBackground(

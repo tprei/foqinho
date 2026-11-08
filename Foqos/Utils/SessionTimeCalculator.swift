@@ -9,6 +9,11 @@ enum SessionTimeCalculator {
   static func breakOrPauseEndTime(for session: BlockedProfileSession) -> Date? {
     let profile = session.blockedProfile
     if let pauseStart = session.pauseStartTime, session.pauseEndTime == nil {
+      if let grant = StudyUnlockGrantStore.grant(
+        sessionId: session.id, coveringPauseStartedAt: pauseStart)
+      {
+        return grant.expiresAt
+      }
       let pauseData = StrategyPauseTimerData.toStrategyPauseTimerData(from: profile.strategyData)
       return pauseStart.addingTimeInterval(TimeInterval(pauseData.pauseDurationInMinutes * 60))
     }
