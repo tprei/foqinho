@@ -4,7 +4,7 @@ enum StudyUnlockGrantStore {
   static let maximumStoredGrants = 50
 
   private static let suite = UserDefaults(
-    suiteName: "group.dev.ambitionsoftware.foqos"
+    suiteName: "group.com.tprei.foqinho"
   )!
 
   private static let grantsKey = "studyUnlock.grants"
