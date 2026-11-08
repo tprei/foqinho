@@ -201,9 +201,12 @@
 				Models/Strategies/Data/StrategyPauseTimerData.swift,
 				Models/Strategies/Data/StrategyTimerData.swift,
 				StrategyAssets.xcassets,
+				StudyUnlock/Domain/StudyMode.swift,
+				StudyUnlock/Domain/StudyUnlockGrant.swift,
 				Utils/AppBlockerUtil.swift,
 				Utils/SessionTimeCalculator.swift,
 				Utils/SoftUnblockGrantStore.swift,
+				Utils/StudyUnlockGrantStore.swift,
 				Utils/ThemeManager.swift,
 			);
 			target = 80FF388C2D80DB540032BC5E /* FoqosWidgetExtension */;
@@ -240,6 +243,7 @@
 				Models/Timers/TimerActivityUtil.swift,
 				Utils/ActiveProfileSyncStore.swift,
 				Utils/AppBlockerUtil.swift,
+				Utils/OneShotDeviceActivitySchedule.swift,
 				Utils/SoftUnblockGrantScheduler.swift,
 				Utils/SoftUnblockGrantStore.swift,
 			);
@@ -282,6 +286,7 @@
 				Models/SoftUnblockGrant.swift,
 				Models/Strategies/Data/SoftUnblockStrategyData.swift,
 				Utils/AppBlockerUtil.swift,
+				Utils/OneShotDeviceActivitySchedule.swift,
 				Utils/SoftUnblockGrantScheduler.swift,
 				Utils/SoftUnblockGrantStore.swift,
 			);

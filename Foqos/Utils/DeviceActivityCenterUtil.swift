@@ -168,6 +168,20 @@ class DeviceActivityCenterUtil {
     print("Scheduled pause timer activity from \(intervalStart) to \(intervalEnd)")
   }
 
+  static func schedulePauseTimerActivity(
+    for profile: BlockedProfiles,
+    endingAt end: Date,
+    now: Date
+  ) throws {
+    let center = DeviceActivityCenter()
+    let deviceActivityName = PauseTimerActivity().getDeviceActivityName(
+      from: profile.id.uuidString)
+    let schedule = OneShotDeviceActivitySchedule.make(endingAt: end, now: now, calendar: .current)
+
+    stopActivities(for: [deviceActivityName], with: center)
+    try center.startMonitoring(deviceActivityName, during: schedule)
+  }
+
   static func removePauseTimerActivity(for profile: BlockedProfiles) {
     let pauseTimerActivity = PauseTimerActivity()
     let deviceActivityName = pauseTimerActivity.getDeviceActivityName(

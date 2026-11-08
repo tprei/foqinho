@@ -37,11 +37,19 @@ extension SessionTimeCalculator {
     for session: BlockedProfileSession,
     at date: Date = Date()
   ) -> Bool {
-    guard let expectedEndTime = expectedEndTime(for: session) else {
+    // An overdue study pause is ended by StrategyManager. Reset would end a session that
+    // otherwise needs its tag or code to stop.
+    guard !isStudyPause(session), let expectedEndTime = expectedEndTime(for: session) else {
       return false
     }
 
     return expectedEndTime.addingTimeInterval(countdownResetGracePeriod) <= date
+  }
+
+  static func isStudyPause(_ session: BlockedProfileSession) -> Bool {
+    guard session.isPauseActive, let pauseStart = session.pauseStartTime else { return false }
+    return StudyUnlockGrantStore.grant(sessionId: session.id, coveringPauseStartedAt: pauseStart)
+      != nil
   }
 
   static func isCountdownReloadDue(
