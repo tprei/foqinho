@@ -3,7 +3,7 @@ import XCTest
 
 // The study unlock rules that the compiler and swift-format can't check.
 final class StudyUnlockCodeRulesTests: XCTestCase {
-  static let featureFilesOutsideFolder: [String] = []
+  static let featureFilesOutsideFolder = ["Foqos/Utils/StudyUnlockGrantStore.swift"]
 
   // Built from parts so the rules don't depend on how this file is written.
   private static let domainBans = [

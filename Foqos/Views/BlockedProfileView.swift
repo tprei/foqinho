@@ -154,6 +154,8 @@ struct BlockedProfileView: View {
 
           BlockedProfileBreaksSection(draft: draft, disabled: isBlocking)
 
+          BlockedProfileStudyUnlockSection(draft: draft, disabled: isBlocking)
+
           BlockedProfileStrictSafeguardsSection(draft: draft, disabled: isBlocking)
 
           BlockedProfileSessionSafeguardsSection(draft: draft, disabled: isBlocking)

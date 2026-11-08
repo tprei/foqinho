@@ -51,6 +51,8 @@ class BlockedProfiles {
   var enableEmergencyUnblock: Bool = true
   var enableHardMode: Bool = false
   var hardModeDurationInMinutes: Int = 30
+  var enableStudyUnlock: Bool = false
+  var studyUnlockMinutes: Int = 15
 
   var customReminderMessage: String?
 
@@ -85,7 +87,9 @@ class BlockedProfiles {
     disableBackgroundStops: Bool = false,
     enableEmergencyUnblock: Bool = true,
     enableHardMode: Bool = false,
-    hardModeDurationInMinutes: Int = 30
+    hardModeDurationInMinutes: Int = 30,
+    enableStudyUnlock: Bool = false,
+    studyUnlockMinutes: Int = 15
   ) {
     self.id = id
     self.name = name
@@ -120,5 +124,7 @@ class BlockedProfiles {
     self.enableEmergencyUnblock = enableEmergencyUnblock
     self.enableHardMode = enableHardMode
     self.hardModeDurationInMinutes = hardModeDurationInMinutes
+    self.enableStudyUnlock = enableStudyUnlock
+    self.studyUnlockMinutes = studyUnlockMinutes
   }
 }

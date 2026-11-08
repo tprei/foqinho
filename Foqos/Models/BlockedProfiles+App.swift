@@ -24,6 +24,11 @@ extension BlockedProfiles {
     !StrategyManager.getStrategyFromId(id: blockingStrategyId ?? NFCBlockingStrategy.id).hasTimer
   }
 
+  var allowsStudyUnlock: Bool {
+    let strategyId = blockingStrategyId ?? NFCBlockingStrategy.id
+    return StrategyManager.getStrategyFromId(id: strategyId).allowsStudyUnlock
+  }
+
   var shouldAskForStartSettings: Bool {
     askForStartSettings || strategyData == nil
   }
@@ -124,7 +129,9 @@ extension BlockedProfiles {
     disableBackgroundStops: Bool? = nil,
     enableEmergencyUnblock: Bool? = nil,
     enableHardMode: Bool? = nil,
-    hardModeDurationInMinutes: Int? = nil
+    hardModeDurationInMinutes: Int? = nil,
+    enableStudyUnlock: Bool? = nil,
+    studyUnlockMinutes: Int? = nil
   ) throws -> BlockedProfiles {
     try ProfileLockUtil.requireAuthorization(for: profile, authorization: authorization)
     if let newName = name {
@@ -237,6 +244,14 @@ extension BlockedProfiles {
 
     if let hardModeDurationInMinutes {
       profile.hardModeDurationInMinutes = hardModeDurationInMinutes
+    }
+
+    if let enableStudyUnlock {
+      profile.enableStudyUnlock = enableStudyUnlock
+    }
+
+    if let studyUnlockMinutes {
+      profile.studyUnlockMinutes = StudyUnlockRules.clampedMinutes(studyUnlockMinutes)
     }
 
     if let physicalUnblockItems {
@@ -377,7 +392,9 @@ extension BlockedProfiles {
     disableBackgroundStops: Bool = false,
     enableEmergencyUnblock: Bool = true,
     enableHardMode: Bool = false,
-    hardModeDurationInMinutes: Int = 30
+    hardModeDurationInMinutes: Int = 30,
+    enableStudyUnlock: Bool = false,
+    studyUnlockMinutes: Int = StudyUnlockRules.defaultMinutes
   ) throws -> BlockedProfiles {
     let profileOrder = getNextOrder(in: context)
 
@@ -406,7 +423,9 @@ extension BlockedProfiles {
       disableBackgroundStops: disableBackgroundStops,
       enableEmergencyUnblock: enableEmergencyUnblock,
       enableHardMode: enableHardMode,
-      hardModeDurationInMinutes: hardModeDurationInMinutes
+      hardModeDurationInMinutes: hardModeDurationInMinutes,
+      enableStudyUnlock: enableStudyUnlock,
+      studyUnlockMinutes: StudyUnlockRules.clampedMinutes(studyUnlockMinutes)
     )
 
     if let schedule = schedule {
@@ -454,7 +473,9 @@ extension BlockedProfiles {
       schedule: source.schedule,
       enableEmergencyUnblock: source.enableEmergencyUnblock,
       enableHardMode: source.enableHardMode,
-      hardModeDurationInMinutes: source.hardModeDurationInMinutes
+      hardModeDurationInMinutes: source.hardModeDurationInMinutes,
+      enableStudyUnlock: source.enableStudyUnlock,
+      studyUnlockMinutes: source.studyUnlockMinutes
     )
 
     cloned.editLockCredential = source.editLockCredential

@@ -404,6 +404,91 @@ struct BlockedProfileBreaksSection: View {
   }
 }
 
+struct BlockedProfileStudyUnlockFields: View {
+  @EnvironmentObject private var themeManager: ThemeManager
+
+  @ObservedObject var draft: BlockedProfileDraft
+  var disabled: Bool
+  var showsSeparators: Bool = false
+
+  @ViewBuilder
+  var body: some View {
+    if draft.selectedStrategyAllowsStudyUnlock {
+      CustomToggle(
+        title: "Study Unlock",
+        description:
+          "Explain out loud what you read. If the evaluation passes, blocking pauses for the selected duration.",
+        isOn: $draft.enableStudyUnlock,
+        isDisabled: disabled
+      )
+
+      if draft.enableStudyUnlock {
+        ProfileFieldDivider(isVisible: showsSeparators)
+
+        unlockDurationPicker
+      }
+    } else {
+      ProfileFieldNotice(
+        title: "Study unlock is off for Temporary Access",
+        message:
+          "This strategy already gives short opens for blocked apps and categories, and a study pause would overlap them."
+      )
+    }
+  }
+
+  private var unlockDurationPicker: some View {
+    VStack(alignment: .leading, spacing: 10) {
+      HStack {
+        Text("Unlock Duration")
+
+        Spacer()
+
+        Text(DateFormatters.formatMinutes(draft.studyUnlockMinutes))
+          .fontWeight(.semibold)
+          .foregroundStyle(.secondary)
+          .contentTransition(.numericText())
+      }
+
+      Slider(
+        value: unlockDurationBinding,
+        in: Double(
+          StudyUnlockRules.minutesRange.lowerBound)...Double(
+            StudyUnlockRules.minutesRange.upperBound),
+        step: 5
+      )
+      .tint(themeManager.themeColor)
+      .accessibilityValue(DateFormatters.formatMinutes(draft.studyUnlockMinutes))
+
+      HStack {
+        Text("5m")
+        Spacer()
+        Text("1h")
+      }
+      .font(.caption2)
+      .foregroundStyle(.secondary)
+    }
+    .disabled(disabled)
+  }
+
+  private var unlockDurationBinding: Binding<Double> {
+    Binding(
+      get: { Double(draft.studyUnlockMinutes) },
+      set: { draft.studyUnlockMinutes = Int($0) }
+    )
+  }
+}
+
+struct BlockedProfileStudyUnlockSection: View {
+  @ObservedObject var draft: BlockedProfileDraft
+  var disabled: Bool
+
+  var body: some View {
+    Section("Study Unlock") {
+      BlockedProfileStudyUnlockFields(draft: draft, disabled: disabled)
+    }
+  }
+}
+
 private struct ProfileFieldNotice: View {
   let title: String
   let message: String
