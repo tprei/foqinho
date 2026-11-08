@@ -91,7 +91,7 @@ lint-fix: ## Fix Swift formatting issues
 	swift-format format --recursive --in-place .
 
 test: ## Run unit tests
-	xcodebuild -project $(PROJECT) -scheme $(SCHEME) -configuration $(CONFIGURATION) -destination '$(TEST_DESTINATION)' test -only-testing:$(UNIT_TEST_TARGET)
+	xcodebuild -project $(PROJECT) -scheme $(SCHEME) -configuration $(CONFIGURATION) -destination '$(TEST_DESTINATION)' test -parallel-testing-enabled NO -only-testing:$(UNIT_TEST_TARGET)/StudyUnlockScreenshotDump
 
 test-all: ## Run all tests, including UI tests
 	xcodebuild -project $(PROJECT) -scheme $(SCHEME) -configuration $(CONFIGURATION) -destination '$(TEST_DESTINATION)' test
