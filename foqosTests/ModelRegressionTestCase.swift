@@ -10,7 +10,7 @@ class ModelRegressionTestCase: XCTestCase {
   var context: ModelContext!
   let referenceDate = Date(timeIntervalSince1970: 1_700_000_000)
   private var savedDefaults: [String: Any] = [:]
-  private let suite = UserDefaults(suiteName: "group.dev.ambitionsoftware.foqos")!
+  private let suite = UserDefaults(suiteName: "group.com.tprei.foqinho")!
 
   override func setUpWithError() throws {
     try super.setUpWithError()
