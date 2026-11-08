@@ -13,6 +13,8 @@
 		808A3C4C2E4ACD18002A7812 /* ManagedSettings.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 808A3C4B2E4ACD18002A7812 /* ManagedSettings.framework */; };
 		808A3C4E2E4ACD18002A7812 /* ManagedSettingsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 808A3C4D2E4ACD18002A7812 /* ManagedSettingsUI.framework */; };
 		808A3C562E4ACD18002A7812 /* FoqosShieldConfig.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 808A3C4A2E4ACD18002A7812 /* FoqosShieldConfig.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		5A0D10042FB0000100000001 /* ReadiumShared in Frameworks */ = {isa = PBXBuildFile; productRef = 5A0D10022FB0000100000001 /* ReadiumShared */; };
+		5A0D10052FB0000100000001 /* ReadiumStreamer in Frameworks */ = {isa = PBXBuildFile; productRef = 5A0D10032FB0000100000001 /* ReadiumStreamer */; };
 		80F674AB2D6185510056977F /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = 80F674AA2D6185510056977F /* CodeScanner */; };
 		80FF388E2D80DB540032BC5E /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80C6CAFA2D4301B3008680F4 /* WidgetKit.framework */; };
 		80FF388F2D80DB540032BC5E /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80C6CAFC2D4301B3008680F4 /* SwiftUI.framework */; };
@@ -390,6 +392,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				80F674AB2D6185510056977F /* CodeScanner in Frameworks */,
+				5A0D10042FB0000100000001 /* ReadiumShared in Frameworks */,
+				5A0D10052FB0000100000001 /* ReadiumStreamer in Frameworks */,
 				803989B32CCC06D600E87F57 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -594,6 +598,8 @@
 			name = foqos;
 			packageProductDependencies = (
 				80F674AA2D6185510056977F /* CodeScanner */,
+				5A0D10022FB0000100000001 /* ReadiumShared */,
+				5A0D10032FB0000100000001 /* ReadiumStreamer */,
 			);
 			productName = foqos;
 			productReference = 801B20952CB363A10073E9E2 /* foqos.app */;
@@ -832,6 +838,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				8021D2462D61837E00A92114 /* XCRemoteSwiftPackageReference "CodeScanner" */,
+				5A0D10012FB0000100000001 /* XCRemoteSwiftPackageReference "swift-toolkit" */,
 				F0B100022F90000100000001 /* XCRemoteSwiftPackageReference "Sparkle" */,
 			);
 			preferredProjectObjectVersion = 77;
@@ -1886,6 +1893,14 @@
 				minimumVersion = 2.9.5;
 			};
 		};
+		5A0D10012FB0000100000001 /* XCRemoteSwiftPackageReference "swift-toolkit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/readium/swift-toolkit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.11.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1898,6 +1913,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F0B100022F90000100000001 /* XCRemoteSwiftPackageReference "Sparkle" */;
 			productName = Sparkle;
+		};
+		5A0D10022FB0000100000001 /* ReadiumShared */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5A0D10012FB0000100000001 /* XCRemoteSwiftPackageReference "swift-toolkit" */;
+			productName = ReadiumShared;
+		};
+		5A0D10032FB0000100000001 /* ReadiumStreamer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5A0D10012FB0000100000001 /* XCRemoteSwiftPackageReference "swift-toolkit" */;
+			productName = ReadiumStreamer;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
