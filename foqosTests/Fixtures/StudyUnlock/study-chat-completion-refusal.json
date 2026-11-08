@@ -1,0 +1,14 @@
+{
+  "id": "chatcmpl-study-refusal",
+  "object": "chat.completion",
+  "created": 1800000000,
+  "model": "gpt-test",
+  "choices": [
+    {
+      "index": 0,
+      "message": { "role": "assistant", "content": null, "refusal": "I can't help with that." },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ]
+}
