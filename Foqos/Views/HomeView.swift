@@ -130,6 +130,11 @@ struct HomeView: View {
       guard let message = errorMessage, !presentation.showActiveProfileSessionView else { return }
       showErrorAlert(message: message)
     }
+    // The cover's own alert goes away with it, so an error raised while it closes shows here.
+    .onChange(of: presentation.showActiveProfileSessionView) { _, isShowing in
+      guard !isShowing, let message = strategyManager.errorMessage else { return }
+      showErrorAlert(message: message)
+    }
     .onAppear {
       onAppearApp()
     }

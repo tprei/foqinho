@@ -5,6 +5,7 @@ import UIKit
 
 struct ActiveProfileSessionView: View {
   @Environment(\.dismiss) private var dismiss
+  @Environment(\.modelContext) private var context
   @EnvironmentObject private var strategyManager: StrategyManager
   @EnvironmentObject private var themeManager: ThemeManager
 
@@ -24,6 +25,7 @@ struct ActiveProfileSessionView: View {
   @State private var alertMessage = ""
   @State private var focusMessageIndex = Self.initialFocusMessageIndex()
   @State private var animationSettings = ActiveSessionAnimationSettings.defaultValue
+  @State private var showingStudySession = false
 
   #if DEBUG
     @State private var showingAnimationTuning = false
@@ -83,6 +85,19 @@ struct ActiveProfileSessionView: View {
     ].contains(strategyId)
   }
 
+  private var canStartStudyUnlock: Bool {
+    profile.enableStudyUnlock && profile.allowsStudyUnlock && activeSession != nil
+      && !isPauseActive && !isBreakActive
+  }
+
+  private var activeStudyGrant: StudyUnlockGrant? {
+    guard isPauseActive, let session = activeSession, let pauseStart = session.pauseStartTime
+    else {
+      return nil
+    }
+    return StudyUnlockGrantStore.grant(sessionId: session.id, coveringPauseStartedAt: pauseStart)
+  }
+
   var body: some View {
     VStack(alignment: .leading, spacing: 0) {
       topControls
@@ -114,6 +129,16 @@ struct ActiveProfileSessionView: View {
         customView: strategyManager.customStrategyView,
         presentationDetents: strategyManager.customStrategyViewPresentationDetents
       )
+    }
+    .sheet(isPresented: $showingStudySession) {
+      if let sessionId = activeSession?.id {
+        StudySessionSheet(
+          environment: .live(), reportError: { strategyManager.errorMessage = $0 }
+        ) { approval in
+          try strategyManager.startStudyUnlock(
+            context: context, approval: approval, sessionId: sessionId)
+        }
+      }
     }
     .onReceive(focusMessageTimer) { _ in
       rotateFocusMessage()
@@ -317,6 +342,11 @@ struct ActiveProfileSessionView: View {
         SoftUnblockActiveGrantsCard(profileId: profile.id)
           .padding(.top, 4)
       }
+
+      if let grant = activeStudyGrant {
+        StudyActiveUnlockCard(grant: grant)
+          .padding(.top, 4)
+      }
     }
     .frame(maxWidth: .infinity, alignment: .leading)
   }
@@ -340,6 +370,15 @@ struct ActiveProfileSessionView: View {
           )
         }
       } else {
+        if canStartStudyUnlock {
+          ActiveSessionActionButton(
+            title: "Explain What I Studied",
+            iconName: "book.fill",
+            role: .standard,
+            action: { showingStudySession = true }
+          )
+        }
+
         if !isPauseActive && isBreakAvailable {
           ActiveSessionActionButton(
             title: breakButtonTitle,
