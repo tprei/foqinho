@@ -13,6 +13,11 @@ final class StudyUnlockCodeRulesTests: XCTestCase {
     "print" + "(", "debug" + "Print(", "dump" + "(", "Log" + "ger", "os" + "_log", "NS" + "Log",
     "try" + "!", "AVAudio" + "Recorder", "AVAudioFile(" + "forWriting", "swift-format" + "-ignore",
   ]
+  // Audio only ever lives in memory, so voice code has no reason to touch a file at all.
+  private static let voiceBans = [
+    "File" + "Manager", "File" + "Handle", ".write(" + "to:", "Output" + "Stream",
+    "AVAudio" + "File", "ExtAudio" + "File", "AVAsset" + "Writer",
+  ]
   private struct SourcesNotFound: Error {}
 
   func testDomainImportsOnlyFoundationAndReadsNoClockOrIO() throws {
@@ -47,6 +52,20 @@ final class StudyUnlockCodeRulesTests: XCTestCase {
       for (number, line) in try Self.lines(of: file) {
         for banned in Self.featureBans where line.contains(banned) {
           XCTFail("\(file.path):\(number) uses \(banned)")
+        }
+      }
+    }
+  }
+
+  func testVoiceNeverTouchesFiles() throws {
+    let root = try Self.repositoryRoot()
+    let files = try Self.swiftFiles(in: root.appendingPathComponent("Foqos/StudyUnlock/Voice"))
+    XCTAssertFalse(files.isEmpty)
+
+    for file in files {
+      for (number, line) in try Self.lines(of: file) {
+        for banned in Self.voiceBans where line.contains(banned) {
+          XCTFail("\(file.lastPathComponent):\(number) uses \(banned)")
         }
       }
     }

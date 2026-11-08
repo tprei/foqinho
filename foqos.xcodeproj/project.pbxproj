@@ -1268,6 +1268,8 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NFCReaderUsageDescription = "This app uses NFC to scan tags for item identification.";
 				INFOPLIST_KEY_NSCameraUsageDescription = "We need camera access to scan QR codes to active/deactivate profiles";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Foqos listens only while you tap Talk, to transcribe your study explanation. Audio is never saved.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Foqos turns your spoken study explanation into text to evaluate it.";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -1317,6 +1319,8 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NFCReaderUsageDescription = "This app uses NFC to scan tags for item identification.";
 				INFOPLIST_KEY_NSCameraUsageDescription = "We need camera access to scan QR codes to active/deactivate profiles";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Foqos listens only while you tap Talk, to transcribe your study explanation. Audio is never saved.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Foqos turns your spoken study explanation into text to evaluate it.";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
