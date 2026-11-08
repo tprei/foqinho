@@ -1,0 +1,14 @@
+{
+  "id": "chatcmpl-study-prose",
+  "object": "chat.completion",
+  "created": 1800000000,
+  "model": "gpt-test",
+  "choices": [
+    {
+      "index": 0,
+      "message": { "role": "assistant", "content": "Great explanation! I would say pass.", "refusal": null },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ]
+}

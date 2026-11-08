@@ -1,0 +1,19 @@
+{
+  "id": "chatcmpl-study-pass",
+  "object": "chat.completion",
+  "created": 1800000000,
+  "model": "gpt-test",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\"decision\":\"pass\",\"basis\":\"document\",\"confidence\":0.86,\"coveredConcepts\":[\"As mitocôndrias produzem ATP\"],\"missingConcepts\":[],\"contradictions\":[],\"evidence\":[{\"chunkId\":\"p41.1\",\"locator\":\"p. 41\",\"concept\":\"As mitocôndrias produzem ATP\"}],\"nextQuestion\":\"\",\"spokenFeedback\":\"Você explicou bem de onde vem o ATP.\"}",
+        "refusal": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": { "prompt_tokens": 812, "completion_tokens": 96, "total_tokens": 908 }
+}
