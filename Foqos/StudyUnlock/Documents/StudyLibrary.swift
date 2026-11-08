@@ -16,14 +16,12 @@ final class StudyLibrary {
     self.fileManager = fileManager
   }
 
-  static func applicationSupport() throws -> StudyLibrary {
-    let support = try FileManager.default.url(
-      for: .applicationSupportDirectory,
-      in: .userDomainMask,
-      appropriateFor: nil,
-      create: true
+  // The folder is created on first import, so opening the library can't fail.
+  static func applicationSupport() -> StudyLibrary {
+    StudyLibrary(
+      root: URL.applicationSupportDirectory.appendingPathComponent(
+        "StudyLibrary", isDirectory: true)
     )
-    return StudyLibrary(root: support.appendingPathComponent("StudyLibrary", isDirectory: true))
   }
 
   func importDocument(from url: URL, now: Date) async throws -> StudyDocumentSummary {
